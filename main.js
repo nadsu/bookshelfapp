@@ -83,8 +83,15 @@ function makeBookshelf(bookshelfObject) {
     checkButton.addEventListener('click', function () {
       addTaskToCompleted(bookshelfObject.id);
     });
+
+    const trashButton2 = document.createElement('button');
+    trashButton2.classList.add('trash-button');
+ 
+    trashButton2.addEventListener('click', function () {
+      removeBookshelfUncompleted(bookshelfObject.id);
+    });
     
-    container.append(checkButton);
+    container.append(checkButton, trashButton2);
   }
  
   return container;
@@ -135,6 +142,19 @@ function removeBookshelfCompleted(bookshelfId) {
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
   show();
+  
+}
+
+function removeBookshelfUncompleted(bookshelfId) {
+  const bookshelfTarget = findBookshelfIndex(bookshelfId);
+ 
+  if (bookshelfTarget === -1) return;
+ 
+  bookshelfs.splice(bookshelfTarget, 1);
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+  show();
+  
 }
  
  
@@ -179,7 +199,6 @@ function isStorageExist()  {
 
 document.addEventListener(SAVED_EVENT, function () {
   console.log(localStorage.getItem(STORAGE_KEY));
-  show();
 });
 
 function loadDataFromStorage() {
@@ -195,7 +214,7 @@ function loadDataFromStorage() {
   document.dispatchEvent(new Event(RENDER_EVENT));
 }
 
-function show() {
+function showremoveComplete() {
   const s = document.querySelector(".Snackbar");
   s.classList.add("show");
   setTimeout(()=> {
